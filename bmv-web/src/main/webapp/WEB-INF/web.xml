@@ -1,0 +1,21 @@
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+		 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+		 version="3.1">
+
+	<context-param> 
+    	<param-name>locatorFactorySelector</param-name> 
+     	<param-value>classpath*:/META-INF/beanRefContext.xml</param-value>
+  	</context-param>
+
+	<display-name>BMV - Desafío</display-name>  
+   	
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+
+	<session-config>
+		<session-timeout>-1</session-timeout>
+	</session-config>
+
+
+</web-app>

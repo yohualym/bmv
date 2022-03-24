@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+	<parent>
+        <groupId>mx.com.bmv</groupId>
+        <artifactId>bmv-desafio</artifactId>
+        <version>1.0</version>
+    </parent>
+	<artifactId>bmv-services-interface</artifactId>
+    <packaging>jar</packaging>
+    <name>BMV :: Interfaces EJB</name>
+    <description>Interfaces de Servicios EJB.</description>
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+    <build>
+    </build>
+    <dependencies>
+        <!-- Dependencias de la Plataforma -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${javaee-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+		<!-- Genera de manera automática getters, setters, constructures, etc. -->
+    </dependencies>
+</project>

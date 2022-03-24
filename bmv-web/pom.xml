@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>mx.com.bmv</groupId>
+        <artifactId>bmv-desafio</artifactId>
+        <version>1.0</version>
+    </parent>
+	<artifactId>bmv-web</artifactId>
+    <packaging>war</packaging>
+    <name>BMV :: Servicios Rest (Web)</name>
+    <description>Capa encargada de publicar los EJBs como servicios RESTful.</description>
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${wildfly-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${war.plugin}</version>
+                <!--configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Dependencies>com.google.guava</Dependencies>
+                        </manifestEntries>
+                    </archive>
+                </configuration-->
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${wildfly-maven-plugin.version}</version>
+            </plugin>
+		</plugins>
+    </build>
+    <dependencies>
+		<!-- Dependencias Desafío -->
+    	<dependency>
+            <groupId>mx.com.bmv</groupId>
+            <artifactId>bmv-services-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<!-- Dependencias de la Plataforma -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${javaee-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Dependencias para pruebas-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<skipTests>true</skipTests>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<skipTests>false</skipTests>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<skipTests>true</skipTests>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<skipTests>true</skipTests>
+			</properties>
+		</profile>
+	</profiles>
+</project>
