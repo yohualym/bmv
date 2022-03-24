@@ -10,6 +10,10 @@
 - Debe tener al menos una mayúscula.
 - Debe contemplar el carácter ñ.
 
+### Diseño
+
+![Diseño](https://raw.githubusercontent.com/yohualym/bmv/master/disenio.png "Diseño.")
+
 ### Requerimientos
 - **JDK 1.7**
 - **Maven 3.6.3**
