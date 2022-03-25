@@ -8,4 +8,7 @@
      
     <context:component-scan base-package="mx.com.bmv.service"/>
      
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    	<property name="locations" value="classpath:password.properties"/>
+	</bean>
 </beans>

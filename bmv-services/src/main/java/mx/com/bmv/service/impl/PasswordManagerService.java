@@ -7,6 +7,7 @@ import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -20,43 +21,61 @@ import mx.com.bmv.service.rest.dto.PasswordDTO;
 @Service
 public class PasswordManagerService implements IPasswordManagerService {
     
-    private static final String PATRON_PASSWORD = "^(?=.*[0-9].*[0-9].*[0-9])(?=.*[0-9])(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*[*.$%&#\"@].*[*.$%&#\"@]).{8,12}$";
-    private static final  String CONJUNTO_ALFANUMERICO = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz0123456789";
-    private static final String CONJUNTO_MAYUSCULAS = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    private static final String CONJUNTO_NUMERICO = "0123456789";
-    private static final String CONJUNTO_ESPECIAL = "$%&#\"@";
-    private static final int LONGITUD_MIN = 8;
-    private static final int LONGITUD_MAX = 12;
-    private static final int CANT_NUMEROS = 3;
-    private static final int CANT_ESPECIALES = 2;
-    private static final int CANT_MAYUSCULAS = 1;
+    @Value ("${password.patron}")
+    private String patron;
     
+    @Value ("${password.conjunto.alfanumerico}")
+    private String conjuntoAlfanumerico;
+    
+    @Value ("${password.conjunto.mayusculas}")
+    private String conjuntoMayusculas;
+    
+    @Value ("${password.conjunto.numerico}")
+    private String conjuntoNumerico;
+    
+    @Value ("${password.conjunto.especial}")
+    private String conjuntoEspecial;
+    
+    @Value ("${password.longitud.min}")
+    private Integer longitudMinima;
+    
+    @Value ("${password.longitud.max}")
+    private Integer longitudMaxima;
+    
+    @Value ("${password.cantidad.numeros}")
+    private Integer cantidadNumeros;
+    
+    @Value ("${password.cantidad.especiales}")
+    private Integer cantidadEspeciales;
+    
+    @Value ("${password.cantidad.mayusculas}")
+    private Integer cantidadMayusculas;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(PasswordManagerService.class);
     
     /**{@inheritDoc}*/
     public Boolean esFuerte(PasswordDTO password) {
-        LOGGER.debug("Validando el password: " + password );
+        LOGGER.debug("Validando el password: {}", password );
         Assert.notNull(password, "El objeto password no puede ser null.");
         Assert.notNull(password.getPassword(), "El atributo password no puede ser null.");
-        return password.getPassword().matches(PATRON_PASSWORD);
+        return password.getPassword().matches(patron);
     }
 
     /**{@inheritDoc}*/
     public PasswordDTO generarPassword(Integer longitud) {
-        LOGGER.debug("Generando password con longitud: " + longitud );
+        LOGGER.debug("Generando password con longitud: {}", longitud );
         Assert.notNull(longitud, "La longitud no puede ser null.");
-        Assert.isTrue (longitud >= LONGITUD_MIN && longitud <= LONGITUD_MAX, 
-                "El valor de la longitud solo puede estar entre " +LONGITUD_MIN +" y " + LONGITUD_MAX + " .");
+        Assert.isTrue (longitud >= longitudMinima && longitud <= longitudMaxima, 
+                "El valor de la longitud solo puede estar entre " + longitudMinima +" y " + longitudMaxima + " .");
         return new PasswordDTO (generaPassword (longitud));
     }
     
     /* Genera password aleatorio.*/
     private String generaPassword(int longitud) {
-        String numeros         = RandomStringUtils.random(CANT_NUMEROS, CONJUNTO_NUMERICO);
-        String especiales     = RandomStringUtils.random(CANT_ESPECIALES, CONJUNTO_ESPECIAL);
-        String mayusculas    = RandomStringUtils.random(CANT_MAYUSCULAS, CONJUNTO_MAYUSCULAS);
-        String regulares     = RandomStringUtils.random(longitud - (CANT_NUMEROS + CANT_ESPECIALES + CANT_MAYUSCULAS), CONJUNTO_ALFANUMERICO);
+        String numeros       = RandomStringUtils.random(cantidadNumeros, conjuntoNumerico);
+        String especiales    = RandomStringUtils.random(cantidadEspeciales, conjuntoEspecial);
+        String mayusculas    = RandomStringUtils.random(cantidadMayusculas, conjuntoMayusculas);
+        String regulares     = RandomStringUtils.random(longitud - (cantidadNumeros + cantidadEspeciales + cantidadMayusculas), conjuntoAlfanumerico);
         
         return mezclaCadenas (numeros, especiales, mayusculas, regulares);
     }
