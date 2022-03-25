@@ -1,5 +1,9 @@
 package mx.com.bmv.service;
 
+import java.io.InputStream;
+import java.util.Properties;
+
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -11,13 +15,48 @@ public class PasswordManagerServiceUTest {
 	
 	private final static int LONGITUD_MIN = 8;
 	private final static int LONGITUD_MAX = 12;
-	private final static String PATRON_PASSWORD = "^(?=.*[0-9].*[0-9].*[0-9])(?=.*[0-9])(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*[*.$%&#\"@].*[*.$%&#\"@]).{8,12}$";
 	
+	private String PATRON_PASSWORD 			= "password.patron";
+	private String CONJUNTO_ALFANUMERICO 	= "password.conjunto.alfanumerico";
+	private String CONJUNTO_MAYUSCULAS 		= "password.conjunto.mayusculas";
+	private String CONJUNTO_NUMERICO 		= "password.conjunto.numerico";
+	private String CONJUNTO_ESPECIAL 		= "password.conjunto.especial";
+	
+	private String KEY_LONGITUD_MIN 		= "password.longitud.min";
+	private String KEY_LONGITUD_MAX 		= "password.longitud.max";
+	
+	private String CANTIDAD_NUMEROS 		= "password.cantidad.numeros";
+	private String CANTIDAD_ESPECIALES 		= "password.cantidad.especiales";
+	private String CANTIDAD_MAYUSCULAS 		= "password.cantidad.mayusculas";
+	
+	private String patronPassword;
+	
+	Properties properties;
 	PasswordManagerService service;
 	
 	@BeforeClass
-	public void setUp() {
+	public void setUp() throws Exception {
+		properties = new Properties();
+		try (InputStream is = PasswordManagerService.class.getResourceAsStream("/password.properties")) {
+		  properties.load(is);
+		}
+		
+		patronPassword = (String) properties.get(PATRON_PASSWORD);
+		
 		service = new PasswordManagerService ();
+		ReflectionTestUtils.setField(service, "patron", patronPassword);
+		ReflectionTestUtils.setField(service, "conjuntoAlfanumerico", 	(String) properties.get(CONJUNTO_ALFANUMERICO));
+		ReflectionTestUtils.setField(service, "conjuntoMayusculas", 	(String) properties.get(CONJUNTO_MAYUSCULAS));
+		ReflectionTestUtils.setField(service, "conjuntoNumerico", 		(String) properties.get(CONJUNTO_NUMERICO));
+		ReflectionTestUtils.setField(service, "conjuntoEspecial", 		(String) properties.get(CONJUNTO_ESPECIAL));
+		
+		ReflectionTestUtils.setField(service, "longitudMinima", 		Integer.valueOf( (String) properties.get(KEY_LONGITUD_MIN)));
+		ReflectionTestUtils.setField(service, "longitudMaxima", 		Integer.valueOf( (String) properties.get(KEY_LONGITUD_MAX)));
+		
+		ReflectionTestUtils.setField(service, "cantidadNumeros", 		Integer.valueOf( (String) properties.get(CANTIDAD_NUMEROS)));
+		ReflectionTestUtils.setField(service, "cantidadEspeciales", 	Integer.valueOf( (String) properties.get(CANTIDAD_ESPECIALES)));
+		ReflectionTestUtils.setField(service, "cantidadMayusculas", 	Integer.valueOf( (String) properties.get(CANTIDAD_MAYUSCULAS)));
+		
 	}
 
 	@Test
@@ -25,7 +64,7 @@ public class PasswordManagerServiceUTest {
 		PasswordDTO password = service.generarPassword(12);
 		Assert.assertNotNull(password);
 		Assert.assertNotNull(password.getPassword());
-		Assert.assertTrue (password.getPassword().matches(PATRON_PASSWORD));
+		Assert.assertTrue (password.getPassword().matches(patronPassword));
 	}
 	
 	@Test (expectedExceptions = {IllegalArgumentException.class}, expectedExceptionsMessageRegExp = ".*La longitud no puede ser null.*")
